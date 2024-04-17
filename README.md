@@ -12,26 +12,34 @@ An app registration for the tenant with Mail.Send permission is required. You'll
 
 ## Installation
 
-This package is scoped so you'll need to add an alias to your package.json. Replace `<version>` with the version number of your choice (eg 2.0.0).
+We will create our own provider without publishing it on npm you can follow these steps:
 
-```json
-  "dependencies": {
+- Create a providers folder in your application.
+- Create your provider (e.g. ./providers/strapi-provider-<plugin>-<provider>)
+- Then update your package.json to link your strapi-provider-<plugin>-<provider> dependency to the local path of your new provider.
+
+  ```json
+  {
     ...
-    "strapi-provider-email-msgraph": "npm:@mondago/strapi-provider-email-msgraph@<version>"
-    ...
+    "dependencies": {
+      ...
+      "strapi-provider-email-msgraph": "file:providers/strapi-provider-email-msgraph",
+      ...
+    }
   }
-```
-
-Then run either `yarn` or `npm install` (depending on which package manager you're using).
+  ```
+  
+- Then run either `yarn` or `npm install` (depending on which package manager you're using).
 
 ## Configuration
 
 To use this provider setup your config/plugins.js file:
+We need to use `provider: "strapi-provider-email-msgraph"` since this is local provider, we can't use provide `msgraph` as it is not published officialy by Strapi
 
 ```javascript
 module.exports = ({ env }) => ({
   email: {
-    provider: "msgraph",
+    provider: "strapi-provider-email-msgraph",
     providerOptions: {
       clientId: env("GRAPH_MAIL_CLIENT_ID"),
       clientSecret: env("GRAPH_MAIL_CLIENT_SECRET"),
@@ -43,11 +51,3 @@ module.exports = ({ env }) => ({
   },
 });
 ```
-
-## Support Matrix
-
-| Our Version | Strapi Version |
-|-------------|----------------|
-| 1.x.x       | 3.x            |
-| 2.x.x       | 4.x            |
-
